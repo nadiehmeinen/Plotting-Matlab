@@ -1,7 +1,7 @@
 % Make ugly Matlab figures prettier (barebone)
 %
 %
-%SYNOSYS
+%SYNOPSYS
 % PRETTIFY(fig_handler, style)
 %
 %
@@ -24,15 +24,21 @@
 % * 3D plots
 % * additional styles
 % * prettify all figures (open windows)
-% * save option
+% * save option?
 
 
 function prettify(fig_handler, style)
+
+%..........................................................................
+% INITIALIZE
+%..........................................................................
 
 fig     = fig_handler;
 ax      = fig.CurrentAxes;
 leg     = findobj(fig,'Tag','legend');
 
+htxt    = findall(fig,'Type','text'); % all text handles; text(), title(), xlabel(), ylabel()
+ntxt    = length(htxt);
 
 if nargin < 1
     % prettify all figures
@@ -40,16 +46,23 @@ elseif nargin < 2
     style = 'latex';
 end
 
+%..........................................................................
+% FORMAT FIGURE(S)
+%..........................................................................
+
 switch lower(style)
     case {'latex', 'l'}
         
         interpreter = 'LaTeX';
         
-        % axes & title
+        % text(), title(), xlabel(), ylabel()
+        for ii = 1:ntxt
+            tmp = htxt(ii);
+            tmp.Interpreter = interpreter;
+        end
+        
+        % ticklabels
         ax.TickLabelInterpreter = interpreter;
-        ax.XLabel.Interpreter   = interpreter;
-        ax.YLabel.Interpreter   = interpreter;
-        ax.Title.Interpreter    = interpreter;
         
         % legend
         if ~isempty(leg)
@@ -59,7 +72,6 @@ switch lower(style)
     otherwise
         error(['Unknown style: ', style])
 end
-
 
 end
 
