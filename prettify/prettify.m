@@ -66,12 +66,17 @@ switch lower(style)
         
         % legend
         if ~isempty(leg)
-            leg.Interpreter         = interpreter;
+            n = numel(leg);
+            for ii = 1:n
+                leg(ii).Interpreter         = interpreter;
+            end
         end
                
     otherwise
         error(['Unknown style: ', style])
 end
+
+set(gcf,'color','w')
 
 end
 
